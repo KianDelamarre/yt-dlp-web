@@ -28,6 +28,7 @@ document.addEventListener('submit', async (e) => {
 
     videoInfoDiv.style.display = "flex"; //start loading animation
     getInfoLoader.style.display = "inline-block";
+    clearInfoHtml();
 
     const videoInfo = await getVideoInfo(url);
     if (videoInfo) {
@@ -93,6 +94,7 @@ async function getVideoInfo(url) {
 }
 
 function generateInfoHtml(videoInfo) {
+    vidoInfoContent.style.display = "flex";
     videoTitleDiv.innerHTML = "";
     const title = document.createElement("h2");
     title.textContent = videoInfo.title;
@@ -117,6 +119,10 @@ function generateInfoHtml(videoInfo) {
     // const id = document.createElement("p");
     // id.textContent = videoInfo.id;
     // videoId.appendChild(id);
+}
+
+function clearInfoHtml() {
+    vidoInfoContent.style.display = "none";
 }
 
 async function convertMedia(url, type) {
