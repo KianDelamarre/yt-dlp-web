@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "push": "docker build -t kiansd/yt-dlp-web:latest . && docker push kiansd/yt-dlp-web:latest"
+    }
+}
