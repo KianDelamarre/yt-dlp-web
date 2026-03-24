@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        <form class="url-bar">
+            <input type="text" id="url" placeholder="Enter URL">
+            <button type="submit" class="btn">Start</button>
+        </form>
+
+        <!-- video info appends here -->
+        <div id="video-info" class="video-info">
+            <span class="loader" id="get-info-loader"></span>
+
+
+            <div class="video-info--content" id="video-info--content">
+
+                <div id="video-thumbnail" class="video-info--thumbnail-container"></div>
+
+
+                <div class="video-info--details">
+                    <div id="video-title" class="video-info--title"></div>
+                    <div id="video-duration" class="video-info--duration"></div>
+                    <div id="video-uploader" class="video-info--uploader"></div>
+                    <div id="video-id" class="video-info--id"></div>
+
+                    <button id="download-audio" class="btn">
+                        <span class="loader" id="download-audio-loader"></span>
+                        <span id="download-audio-button-text">Download Audio</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="script.js" type="module"></script>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+GET http://localhost:3000/convert?url=https://www.youtube.com/shorts/Os2tfilLj8c
+
+###
+
+GET http://localhost:3000/info?url=https://www.youtube.com/shorts/Os2tfilLj8c
+
+### 
+
+GET http://localhost:3000/download/1774090039454
+
+###
