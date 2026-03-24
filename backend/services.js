@@ -116,20 +116,41 @@ export function processMediaService(convertParams) {
     return new Promise((resolve, reject) => {
         const jobId = Date.now();
         const url = convertParams.url;
-        const isAudio = convertParams.type === "audio";
+        // const isAudio = convertParams.type === "audio";
+        const type = convertParams.type;
 
         // Define extension and output path based on type
-        const ext = isAudio ? "mp3" : "mp4";
+        // const ext = isAudio ? "mp3" : "mkv";
+
+        const extensions = {
+            'audio': 'mp3',
+            'video': 'mkv'
+        }
+
+        const ext = extensions[type];
         const outputPath = `/tmp/${jobId}.${ext}`;
 
         // Base arguments common to both
         let args = [url, "-o", `/tmp/${jobId}.%(ext)s`];
 
-        if (isAudio) {
+
+        // Inside your video conversion function
+        // args = [
+        //     url,
+        //     "-f", "bestvideo+bestaudio/best", // Get best quality
+        //     "--merge-output-format", "mkv",    // FORCE the output to be .mkv
+        //     "-o", `/tmp/${jobId}.%(ext)s`      // yt-dlp will replace %(ext)s with mkv
+        // ];
+
+        if (type === "audio") {
+            console.log("extracting audio")
             args.push("--extract-audio", "--audio-format", "mp3");
+        } else if (type === "video") {
+            console.log("extracting video")
+            // Video: download best quality, default mkv merge
+            args.push("-f", "bestvideo+bestaudio/best", "--merge-output-format", "mkv");
         } else {
-            // Video: Ensure best mp4 format or merge to mp4
-            args.push("-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
+            reject(new Error("Invalid convert type"));
         }
 
         const proc = spawn("yt-dlp", args);

@@ -175,6 +175,14 @@ body {
     padding: 1rem;
 }
 
+.video-info--details .download-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
+}
+
 .video-info--details .btn {
     align-self: center;
 }

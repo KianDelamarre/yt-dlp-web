@@ -48,10 +48,11 @@ downloadAudioBtn.addEventListener('click', async (e) => {
     downloadAudioButtonText.innerText = "Converting";
     const response = await convertMedia(url, "audio");
     if (response.done) {
-        downloadAudioLoader.style.display = "none";
-        downloadAudioButtonText.innerText = "Download Audio";
+        downloadAudioButtonText.innerText = "Downloading...";
         const { jobId } = response;
         downloadFile(jobId, "audio");
+        downloadAudioLoader.style.display = "none";
+        downloadAudioButtonText.innerText = "Download Audio";
     }
 
 })
@@ -63,11 +64,12 @@ downloadVideoBtn.addEventListener('click', async (e) => {
     downloadVideoLoader.style.display = "inline-block";
     downloadVideoButtonText.innerText = "Converting";
     const response = await convertMedia(url, "video");
-    if (response.done) {
-        downloadVideoLoader.style.display = "none";
-        downloadVideoButtonText.innerText = "Download Video";
+    if (response && response.done) {
+        downloadVideoButtonText.innerText = "Downloading...";
         const { jobId } = response;
         downloadFile(jobId, "video");
+        downloadVideoLoader.style.display = "none";
+        downloadVideoButtonText.innerText = "Download Video";
     }
 
 })
@@ -149,41 +151,63 @@ async function convertMedia(url, type) {
 
 
 
-async function downloadFile(jobId, ext) {
-    try {
-        const response = await fetch(`/download`, {
-            method: "POST", // POST allows the JSON body
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                downloadParams: { jobId, ext }
-            }),
-        });
+// async function downloadFile(jobId, type) {
+//     try {
+//         const response = await fetch(`/download`, {
+//             method: "POST", // POST allows the JSON body
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({
+//                 downloadParams: {
+//                     jobId: jobId,
+//                     type: type
+//                 }
+//             }),
+//         });
 
-        if (!response.ok) {
-            throw new Error("Download failed. File might have expired.");
-        }
+//         const extensions = {
+//             'audio': 'mp3',
+//             'video': 'mp4'
+//         }
 
-        // 1. Convert the response into a Blob (the raw file data)
-        const blob = await response.blob();
+//         const ext = extensions[type];
+//         console.log("file extension is ", ext);
 
-        // 2. Create a temporary URL for this binary data
-        const url = window.URL.createObjectURL(blob);
+//         if (!response.ok) {
+//             throw new Error("Download failed. File might have expired.");
+//         }
 
-        // 3. Create a "ghost" anchor link and click it programmatically
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `video-${jobId}.${ext}`; // The filename the user sees
-        document.body.appendChild(a);
-        a.click();
+//         // 1. Convert the response into a Blob (the raw file data)
+//         const blob = await response.blob();
 
-        // 4. Cleanup: remove the link and revoke the URL to save memory
-        a.remove();
-        window.URL.revokeObjectURL(url);
+//         // 2. Create a temporary URL for this binary data
+//         const url = window.URL.createObjectURL(blob);
 
-    } catch (error) {
-        console.error("Download Error:", error);
-        alert("Could not download file: " + error.message);
-    }
+//         // 3. Create a "ghost" anchor link and click it programmatically
+//         const a = document.createElement("a");
+//         a.href = url;
+//         a.download = `video-${jobId}.${ext}`; // The filename the user sees
+//         document.body.appendChild(a);
+//         a.click();
+
+//         // 4. Cleanup: remove the link and revoke the URL to save memory
+//         a.remove();
+//         window.URL.revokeObjectURL(url);
+
+//     } catch (error) {
+//         console.error("Download Error:", error);
+//         alert("Could not download file: " + error.message);
+//     }
+// }
+
+function downloadFile(jobId, type) {
+
+
+
+    // Build the URL with Query Parameters
+    const downloadUrl = `/download/${jobId}?type=${type}`;
+
+    // Trigger the native browser download manager
+    window.location.href = downloadUrl;
 }

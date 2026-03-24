@@ -21,7 +21,7 @@ app.use(express.static(frontendPath));
 
 // Optional: redirect "/" to "index.html"
 app.get("/", serveFrontendController);
-app.post("/download", downloadController);
+app.get("/download/:jobId", downloadController);
 app.post("/convert", convertController);
 app.get("/info", infoController);
 

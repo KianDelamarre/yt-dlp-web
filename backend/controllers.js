@@ -13,14 +13,51 @@ export function serveFrontendController(req, res) {
 }
 
 
-//expects req body to have 
-// downloadParams: {jobId: string,
-//                  ext: "mp3" | "mp4"}
-export function downloadController(req, res) {
-    const { jobId } = req.body.downloadParams;
-    const { ext } = req.body.downloadParams;
-    console.log(jobId, ext);
+export async function infoController(req, res) {
+    const url = req.query.url;
+    if (!url) {
+        return res.status(400).json({ error: "Missing URL" });
+    }
 
+    try {
+        const info = await getInfoService(url); // wait for the Promise
+        res.json(info); // already has { title, duration, uploader, id }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+}
+
+//expects req body to have 
+// convertParams: {url: string,
+//                 type: "audio" | "video"}
+export async function convertController(req, res) {
+    // const url = req.query.url;
+    const convertParams = req.body.convertParams;
+    if (!convertParams) return res.status(400).json({ error: "Missing convertParams" });
+
+    try {
+        const result = await processMediaService(convertParams);
+        res.json(result); // { done: true, path: '/tmp/...mp3' }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
+//expects url/:jobId?type=audio|video
+export function downloadController(req, res) {
+    const { jobId } = req.params;
+    const { type } = req.query;
+
+    console.log("download controller", jobId, type);
+
+    const extensions = {
+        'audio': 'mp3',
+        'video': 'mkv'
+    }
+
+    const ext = extensions[type];
     const filePath = path.resolve(`/tmp/${jobId}.${ext}`);
 
     if (!fs.existsSync(filePath)) {
@@ -30,10 +67,9 @@ export function downloadController(req, res) {
     // 1. Map extensions to their correct MIME types
     const mimeTypes = {
         'mp3': 'audio/mpeg',
-        'mp4': 'video/mp4',
-        // 'm4a': 'audio/mp4',
-        // 'webm': 'video/webm'
+        'mkv': 'video/x-matroska',
     };
+
 
     // 2. Determine the correct type (fallback to octet-stream if unknown)
     const contentType = mimeTypes[ext] || 'application/octet-stream';
@@ -57,36 +93,4 @@ export function downloadController(req, res) {
             if (err) console.error("Failed to delete file:", err);
         });
     });
-}
-
-//expects req body to have 
-// convertParams: {url: string,
-//                 type: "audio" | "video"}
-export async function convertController(req, res) {
-    // const url = req.query.url;
-    const convertParams = req.body.convertParams;
-    if (!convertParams) return res.status(400).json({ error: "Missing convertParams" });
-
-    try {
-        const result = await processMediaService(convertParams);
-        res.json(result); // { done: true, path: '/tmp/...mp3' }
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-
-
-export async function infoController(req, res) {
-    const url = req.query.url;
-    if (!url) {
-        return res.status(400).json({ error: "Missing URL" });
-    }
-
-    try {
-        const info = await getInfoService(url); // wait for the Promise
-        res.json(info); // already has { title, duration, uploader, id }
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message });
-    }
 }

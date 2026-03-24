@@ -4,7 +4,7 @@ Content-Type: application/json
 {
     "convertParams": {
         "url": "https://www.youtube.com/shorts/Os2tfilLj8c",
-        "type": "audio"
+        "type": "video"
     }
 }
 
@@ -14,14 +14,7 @@ GET http://192.168.0.21:3002/info?url=https://www.youtube.com/shorts/Os2tfilLj8c
 
 ### 
 
-POST http://192.168.0.21:3002/download
-Content-Type: application/json
+GET http://192.168.0.21:3002/download/1774378507749?type=video
 
-{
-    "downloadParams": {
-        "jobId": "1774370904835",
-        "ext": "mp3"
-    }
-}
 
 ###
