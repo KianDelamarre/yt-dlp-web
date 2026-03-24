@@ -13,6 +13,7 @@ const app = express();
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
 app.use(cors({ origin: ALLOWED_ORIGIN }));
+app.use(express.json());
 
 // Serve static frontend files
 const frontendPath = path.resolve(__dirname, "../frontend");
@@ -20,8 +21,8 @@ app.use(express.static(frontendPath));
 
 // Optional: redirect "/" to "index.html"
 app.get("/", serveFrontendController);
-app.get("/download/:jobId", downloadController);
-app.get("/convert", convertController);
+app.post("/download", downloadController);
+app.post("/convert", convertController);
 app.get("/info", infoController);
 
 

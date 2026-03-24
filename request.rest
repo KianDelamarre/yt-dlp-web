@@ -1,11 +1,27 @@
-GET http://localhost:3000/convert?url=https://www.youtube.com/shorts/Os2tfilLj8c
+POST http://192.168.0.21:3002/convert
+Content-Type: application/json
+
+{
+    "convertParams": {
+        "url": "https://www.youtube.com/shorts/Os2tfilLj8c",
+        "type": "audio"
+    }
+}
 
 ###
 
-GET http://localhost:3000/info?url=https://www.youtube.com/shorts/Os2tfilLj8c
+GET http://192.168.0.21:3002/info?url=https://www.youtube.com/shorts/Os2tfilLj8c
 
 ### 
 
-GET http://localhost:3000/download/1774090039454
+POST http://192.168.0.21:3002/download
+Content-Type: application/json
+
+{
+    "downloadParams": {
+        "jobId": "1774370904835",
+        "ext": "mp3"
+    }
+}
 
 ###

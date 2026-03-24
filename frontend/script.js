@@ -6,6 +6,8 @@ const videoInfoDiv = document.getElementById("video-info");
 const getInfoLoader = document.getElementById("get-info-loader");
 const downloadAudioLoader = document.getElementById("download-audio-loader");
 const downloadAudioButtonText = document.getElementById("download-audio-button-text");
+const downloadVideoLoader = document.getElementById("download-video-loader");
+const downloadVideoButtonText = document.getElementById("download-video-button-text");
 
 const vidoInfoContent = document.getElementById("video-info--content");
 const videoTitleDiv = document.getElementById("video-title");
@@ -15,6 +17,7 @@ const videoUploader = document.getElementById("video-uploader");
 const videoId = document.getElementById("video-id");
 
 const downloadAudioBtn = document.getElementById("download-audio");
+const downloadVideoBtn = document.getElementById("download-video");
 
 let videoTitle;
 
@@ -43,11 +46,28 @@ downloadAudioBtn.addEventListener('click', async (e) => {
     if (!url) return;
     downloadAudioLoader.style.display = "inline-block";
     downloadAudioButtonText.innerText = "Converting";
-    const response = await convertToAudio(url);
+    const response = await convertMedia(url, "audio");
     if (response.done) {
         downloadAudioLoader.style.display = "none";
         downloadAudioButtonText.innerText = "Download Audio";
-        window.location.href = `/download/${response.jobId}`;
+        const { jobId } = response;
+        downloadFile(jobId, "audio");
+    }
+
+})
+
+downloadVideoBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const url = urlInput.value.trim();
+    if (!url) return;
+    downloadVideoLoader.style.display = "inline-block";
+    downloadVideoButtonText.innerText = "Converting";
+    const response = await convertMedia(url, "video");
+    if (response.done) {
+        downloadVideoLoader.style.display = "none";
+        downloadVideoButtonText.innerText = "Download Video";
+        const { jobId } = response;
+        downloadFile(jobId, "video");
     }
 
 })
@@ -97,10 +117,21 @@ function generateInfoHtml(videoInfo) {
     // videoId.appendChild(id);
 }
 
-async function convertToAudio(url) {
+async function convertMedia(url, type) {
     try {
-        const query = new URLSearchParams({ url }).toString();
-        const response = await fetch(`/convert?${query}`);
+        // const query = new URLSearchParams({ url }).toString();
+        const response = await fetch(`/convert`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                convertParams: {
+                    url: url,
+                    type: type
+                }
+            }),
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -115,3 +146,44 @@ async function convertToAudio(url) {
 }
 
 
+
+
+
+async function downloadFile(jobId, ext) {
+    try {
+        const response = await fetch(`/download`, {
+            method: "POST", // POST allows the JSON body
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                downloadParams: { jobId, ext }
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Download failed. File might have expired.");
+        }
+
+        // 1. Convert the response into a Blob (the raw file data)
+        const blob = await response.blob();
+
+        // 2. Create a temporary URL for this binary data
+        const url = window.URL.createObjectURL(blob);
+
+        // 3. Create a "ghost" anchor link and click it programmatically
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `video-${jobId}.${ext}`; // The filename the user sees
+        document.body.appendChild(a);
+        a.click();
+
+        // 4. Cleanup: remove the link and revoke the URL to save memory
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error("Download Error:", error);
+        alert("Could not download file: " + error.message);
+    }
+}

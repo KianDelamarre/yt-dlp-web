@@ -62,6 +62,17 @@ export function getInfoService(url) {
 //   .then((data) => console.log(data))
 //   .catch((err) => console.error(err));
 
+export function convertSwitchService(url, convertParams) {
+    if (convertParams.type === "audio") {
+        return convertToAudioService(url);
+    }
+    else if (convertParams.type === "video") {
+        return convertToVideoService(url);
+    }
+    else {
+        throw new Error("Invalid convert type");
+    }
+}
 
 export function convertToAudioService(url) {
     return new Promise((resolve, reject) => {
@@ -97,5 +108,45 @@ export function convertToAudioService(url) {
                 reject(new Error(`yt-dlp exited with code ${code}`));
             }
         });
+    });
+}
+
+
+export function processMediaService(convertParams) {
+    return new Promise((resolve, reject) => {
+        const jobId = Date.now();
+        const url = convertParams.url;
+        const isAudio = convertParams.type === "audio";
+
+        // Define extension and output path based on type
+        const ext = isAudio ? "mp3" : "mp4";
+        const outputPath = `/tmp/${jobId}.${ext}`;
+
+        // Base arguments common to both
+        let args = [url, "-o", `/tmp/${jobId}.%(ext)s`];
+
+        if (isAudio) {
+            args.push("--extract-audio", "--audio-format", "mp3");
+        } else {
+            // Video: Ensure best mp4 format or merge to mp4
+            args.push("-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
+        }
+
+        const proc = spawn("yt-dlp", args);
+
+        proc.on("close", (code) => {
+            if (code === 0) {
+                if (fs.existsSync(outputPath)) {
+                    resolve({ done: true, path: outputPath, jobId: jobId, type: convertParams.type });
+                } else {
+                    reject(new Error(`yt-dlp finished but ${ext} file was not found`));
+                }
+            } else {
+                reject(new Error(`yt-dlp exited with code ${code}`));
+            }
+        });
+
+        // Optional: Log errors for debugging
+        proc.stderr.on("data", (data) => console.error(`[yt-dlp error]: ${data}`));
     });
 }
