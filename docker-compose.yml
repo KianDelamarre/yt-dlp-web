@@ -8,10 +8,12 @@ services:
       - "3002:3000"
     restart: unless-stopped
     environment:
-      - ALLOWED_ORIGIN=http://[IP_ADDRESS]
+      - ALLOWED_ORIGIN=http://192.168.0.21
     volumes:
       # Maps the container's /tmp to a local ./downloads folder.
       # This prevents the container's storage from ballooning during large video conversions,
       # and gives you access to the files if you ever want to check them manually.
       - ./downloads:/tmp
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
       # - ./:/app
