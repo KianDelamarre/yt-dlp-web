@@ -1,18 +1,10 @@
-import express from "express";
-import cors from "cors";
+
 import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const app = express();
-
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
-app.use(cors({ origin: ALLOWED_ORIGIN }));
-
-
 
 
 
