@@ -36,6 +36,11 @@ document.addEventListener('submit', async (e) => {
         vidoInfoContent.style.display = "flex";
         videoTitle = videoInfo.title;
         generateInfoHtml(videoInfo);
+        videoInfoDiv.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center"
+        });
     }
     // console.log(videoInfo);
 
