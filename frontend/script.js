@@ -23,14 +23,14 @@ let videoTitle;
 
 const isIOS = clientIsIOS();
 
-window.onload = () => {
-    if (isIOS) {
-        downloadVideoBtn.innerText = "Convert Video";
-    }
-    else {
-        downloadVideoBtn.innerText = "Download Video";
-    }
+if (isIOS) {
+    downloadVideoButtonText.innerText = "Convert Video";
 }
+else {
+    downloadVideoButtonText.innerText = "Download Video";
+
+}
+
 
 
 document.addEventListener('submit', async (e) => {
@@ -90,6 +90,7 @@ downloadVideoBtn.addEventListener('click', async (e) => {
         if (response && response.done) {
             const { jobId } = response;
             file = await downloadFile(jobId, "video");
+
             downloadVideoLoader.style.display = "none";
             if (isIOS) {
                 downloadVideoButtonText.innerText = "Download";
