@@ -63,19 +63,30 @@ downloadAudioBtn.addEventListener('click', async (e) => {
 
 })
 
+let video = 'convert';
+let response;
+
 downloadVideoBtn.addEventListener('click', async (e) => {
     e.preventDefault();
-    const url = urlInput.value.trim();
-    if (!url) return;
-    downloadVideoLoader.style.display = "inline-block";
-    downloadVideoButtonText.innerText = "Converting";
-    const response = await convertMedia(url, "video");
-    if (response && response.done) {
+    if (video === 'convert') {
+        const url = urlInput.value.trim();
+        if (!url) return;
+        downloadVideoLoader.style.display = "inline-block";
+        downloadVideoButtonText.innerText = "Converting";
+        response = await convertMedia(url, "video");
+        if (response && response.done) {
+            video = 'download';
+            downloadVideoButtonText.innerText = "Download";
+        }
+    }
+
+    if (video === 'download') {
         downloadVideoButtonText.innerText = "Downloading...";
         const { jobId } = response;
         await downloadFile(jobId, "video");
         downloadVideoLoader.style.display = "none";
-        downloadVideoButtonText.innerText = "Download Video";
+        downloadVideoButtonText.innerText = "Convert Video";
+        video = 'convert';
     }
 
 })
@@ -293,16 +304,16 @@ async function downloadFile(jobId, type) {
 
 
 
-// function isIOS() {
-//     const ua = navigator.userAgent;
+function isIOS() {
+    const ua = navigator.userAgent;
 
-//     // 1. Direct check for iPhone/iPod
-//     const isIPhone = /iPhone|iPod/.test(ua);
+    // 1. Direct check for iPhone/iPod
+    const isIPhone = /iPhone|iPod/.test(ua);
 
-//     // 2. Check for iPad
-//     // Modern iPads (iPadOS) report as 'Macintosh' but have touch points
-//     const isIPad = /iPad/.test(ua) ||
-//         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    // 2. Check for iPad
+    // Modern iPads (iPadOS) report as 'Macintosh' but have touch points
+    const isIPad = /iPad/.test(ua) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-//     return isIPhone || isIPad;
-// }
+    return isIPhone || isIPad;
+}
