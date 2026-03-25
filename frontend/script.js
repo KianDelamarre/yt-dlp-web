@@ -28,7 +28,6 @@ if (isIOS) {
 }
 else {
     downloadVideoButtonText.innerText = "Download Video";
-
 }
 
 
@@ -289,22 +288,64 @@ async function downloadFile(jobId, type) {
     }
 }
 
+
+
 async function saveFile(file) {
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
+    // Keep track of the URL if we create one for the fallback
+    let tempUrl = null;
+
+    try {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({
                 files: [file],
                 title: 'Download Video',
             });
-        } catch (err) {
-            // This catches if the user clicks "Cancel" on the Share Sheet
-            console.log("User cancelled or share failed", err);
+        } else {
+            // Fallback for non-sharing browsers
+            tempUrl = URL.createObjectURL(file);
+            const link = document.createElement('a');
+            link.href = tempUrl;
+            link.download = file.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-    } else {
-        // Fallback for browsers that don't support file sharing
-        alert("Your browser doesn't support direct saving. Try opening in Safari.");
+    } catch (err) {
+        console.error("Save process interrupted:", err);
+    } finally {
+        // --- CLEANUP PHASE ---
+
+        // 1. Release the Object URL from memory if it exists
+        if (tempUrl) {
+            URL.revokeObjectURL(tempUrl);
+            tempUrl = null;
+        }
+
+        // 2. Clear the global 'file' variable so the memory used to store the blob can be GC'd
+        // Note: You'll need to make sure 'file' is the global one you defined
+        window.file = null;
+        console.log("Memory cleared after download complete.");
     }
 }
+
+
+
+// async function saveFile(file) {
+//     if (navigator.canShare && navigator.canShare({ files: [file] })) {
+//         try {
+//             await navigator.share({
+//                 files: [file],
+//                 title: 'Download Video',
+//             });
+//         } catch (err) {
+//             // This catches if the user clicks "Cancel" on the Share Sheet
+//             console.log("User cancelled or share failed", err);
+//         }
+//     } else {
+//         // Fallback for browsers that don't support file sharing
+//         alert("Your browser doesn't support direct saving. Try opening in Safari.");
+//     }
+// }
 
 
 
