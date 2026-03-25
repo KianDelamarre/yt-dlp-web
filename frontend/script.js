@@ -65,6 +65,7 @@ downloadAudioBtn.addEventListener('click', async (e) => {
 
 let video = 'convert';
 let response;
+let file;
 
 downloadVideoBtn.addEventListener('click', async (e) => {
     e.preventDefault();
@@ -75,22 +76,24 @@ downloadVideoBtn.addEventListener('click', async (e) => {
         downloadVideoButtonText.innerText = "Converting";
         response = await convertMedia(url, "video");
         if (response && response.done) {
-            video = 'download';
+            const { jobId } = response;
+            file = await downloadFile(jobId, "video");
+            downloadVideoLoader.style.display = "none";
             downloadVideoButtonText.innerText = "Download";
+            video = 'save';
             return;
         }
     }
 
-    if (video === 'download') {
+    if (video === 'save') {
+        downloadVideoLoader.style.display = "inline-block";
         downloadVideoButtonText.innerText = "Downloading...";
-        const { jobId } = response;
-        await downloadFile(jobId, "video");
+        saveFile(file, videoTitle);
         downloadVideoLoader.style.display = "none";
         downloadVideoButtonText.innerText = "Convert Video";
         video = 'convert';
         return;
     }
-
 })
 
 
@@ -256,22 +259,26 @@ async function downloadFile(jobId, type) {
 
             // CRITICAL: fileName must be defined (we did that above)
             const file = new File([blob], fileName, { type: mime });
+            return file;
 
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: 'Save to Photos',
-                    text: 'Your video is ready!'
-                });
-            } else {
-                console.warn("Share API not supported, falling back to href");
-                // window.location.href = query;
-            }
         } catch (err) {
             console.error("iOS Share failed:", err);
             // window.location.href = query;
         }
     } else {
+        // window.location.href = query;
+    }
+}
+
+async function saveFile(file) {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+            files: [file],
+            title: 'Save to Photos',
+            text: 'Your video is ready!'
+        });
+    } else {
+        console.warn("Share API not supported, falling back to href");
         // window.location.href = query;
     }
 }
