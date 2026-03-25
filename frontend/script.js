@@ -218,7 +218,7 @@ async function convertMedia(url, type) {
 
 async function downloadFile(jobId, type) {
     // Forcing true for testing on your iPhone
-    const isIOS = true;
+    const isIOS = isIOS();
 
     // Define a nice filename here so it's ready for the File constructor
     const mime = type === 'audio' ? 'audio/mpeg' : 'video/mp4';
@@ -255,4 +255,20 @@ async function downloadFile(jobId, type) {
     } else {
         window.location.href = query;
     }
+}
+
+
+
+function isIOS() {
+    const ua = navigator.userAgent;
+
+    // 1. Direct check for iPhone/iPod
+    const isIPhone = /iPhone|iPod/.test(ua);
+
+    // 2. Check for iPad
+    // Modern iPads (iPadOS) report as 'Macintosh' but have touch points
+    const isIPad = /iPad/.test(ua) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    return isIPhone || isIPad;
 }
