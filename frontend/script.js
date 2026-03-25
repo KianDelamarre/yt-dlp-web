@@ -88,7 +88,7 @@ downloadVideoBtn.addEventListener('click', async (e) => {
     if (video === 'save') {
         downloadVideoLoader.style.display = "inline-block";
         downloadVideoButtonText.innerText = "Downloading...";
-        saveFile(file, videoTitle);
+        saveFile(file);
         downloadVideoLoader.style.display = "none";
         downloadVideoButtonText.innerText = "Convert Video";
         video = 'convert';
@@ -272,14 +272,18 @@ async function downloadFile(jobId, type) {
 
 async function saveFile(file) {
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-            files: [file],
-            title: 'Save to Photos',
-            text: 'Your video is ready!'
-        });
+        try {
+            await navigator.share({
+                files: [file],
+                title: 'Download Video',
+            });
+        } catch (err) {
+            // This catches if the user clicks "Cancel" on the Share Sheet
+            console.log("User cancelled or share failed", err);
+        }
     } else {
-        console.warn("Share API not supported, falling back to href");
-        // window.location.href = query;
+        // Fallback for browsers that don't support file sharing
+        alert("Your browser doesn't support direct saving. Try opening in Safari.");
     }
 }
 
