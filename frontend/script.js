@@ -77,6 +77,7 @@ downloadVideoBtn.addEventListener('click', async (e) => {
         if (response && response.done) {
             video = 'download';
             downloadVideoButtonText.innerText = "Download";
+            return;
         }
     }
 
@@ -87,6 +88,7 @@ downloadVideoBtn.addEventListener('click', async (e) => {
         downloadVideoLoader.style.display = "none";
         downloadVideoButtonText.innerText = "Convert Video";
         video = 'convert';
+        return;
     }
 
 })
