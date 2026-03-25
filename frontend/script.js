@@ -97,7 +97,7 @@ downloadVideoBtn.addEventListener('click', async (e) => {
                 return
             }
             else {
-                downloadVideoButtonText.innerText = "Convert Video";
+                downloadVideoButtonText.innerText = "Download Video";
                 return;
             }
         }
