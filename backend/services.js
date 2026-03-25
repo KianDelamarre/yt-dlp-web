@@ -124,7 +124,7 @@ export function processMediaService(convertParams) {
 
         const extensions = {
             'audio': 'mp3',
-            'video': 'mkv'
+            'video': 'mp4'
         }
 
         const ext = extensions[type];
@@ -144,11 +144,12 @@ export function processMediaService(convertParams) {
 
         if (type === "audio") {
             console.log("extracting audio")
-            args.push("--extract-audio", "--audio-format", "mp3");
+            args.push("--extract-audio", "--audio-format", ext); //audio only
         } else if (type === "video") {
-            console.log("extracting video")
-            // Video: download best quality, default mkv merge
-            args.push("-f", "bestvideo+bestaudio/best", "--merge-output-format", "mkv");
+            console.log("extracting video (iOS compatible)");
+            // This tells yt-dlp: "Give me the best video that is h264, and the best audio that is m4a"
+            args.push("-f", "bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/best[vcodec^=avc1]/best");
+            args.push("--merge-output-format", ext);
         } else {
             reject(new Error("Invalid convert type"));
         }

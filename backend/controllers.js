@@ -54,7 +54,7 @@ export function downloadController(req, res) {
 
     const extensions = {
         'audio': 'mp3',
-        'video': 'mkv'
+        'video': 'mp4'
     }
 
     const ext = extensions[type];
@@ -68,6 +68,7 @@ export function downloadController(req, res) {
     const mimeTypes = {
         'mp3': 'audio/mpeg',
         'mkv': 'video/x-matroska',
+        'mp4': 'video/mp4',
     };
 
 
