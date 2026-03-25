@@ -21,6 +21,18 @@ const downloadVideoBtn = document.getElementById("download-video");
 
 let videoTitle;
 
+const isIOS = clientIsIOS();
+
+window.onload = () => {
+    if (isIOS) {
+        downloadVideoBtn.innerText = "Convert Video";
+    }
+    else {
+        downloadVideoBtn.innerText = "Download Video";
+    }
+}
+
+
 document.addEventListener('submit', async (e) => {
     e.preventDefault();
     const url = urlInput.value.trim();
@@ -79,9 +91,15 @@ downloadVideoBtn.addEventListener('click', async (e) => {
             const { jobId } = response;
             file = await downloadFile(jobId, "video");
             downloadVideoLoader.style.display = "none";
-            downloadVideoButtonText.innerText = "Download";
-            video = 'save';
-            return;
+            if (isIOS) {
+                downloadVideoButtonText.innerText = "Download";
+                video = 'save';
+                return
+            }
+            else {
+                downloadVideoButtonText.innerText = "Convert Video";
+                return;
+            }
         }
     }
 
@@ -240,7 +258,7 @@ async function convertMedia(url, type) {
 async function downloadFile(jobId, type) {
     // Forcing true for testing on your iPhone
     // const isIOS = isIOS();
-    const isIOS = true
+    // const isIOS = true
 
     // Define a nice filename here so it's ready for the File constructor
     const mime = type === 'audio' ? 'audio/mpeg' : 'video/mp4';
@@ -263,10 +281,10 @@ async function downloadFile(jobId, type) {
 
         } catch (err) {
             console.error("iOS Share failed:", err);
-            // window.location.href = query;
+            window.location.href = query;
         }
     } else {
-        // window.location.href = query;
+        window.location.href = query;
     }
 }
 
@@ -317,7 +335,7 @@ async function saveFile(file) {
 
 
 
-function isIOS() {
+function clientIsIOS() {
     const ua = navigator.userAgent;
 
     // 1. Direct check for iPhone/iPod
