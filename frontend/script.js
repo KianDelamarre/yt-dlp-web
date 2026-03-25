@@ -212,56 +212,56 @@ async function convertMedia(url, type) {
 //     }
 // }
 
-function downloadFile(jobId, type) {
-    // Build the URL with Query Parameters
-    const downloadUrl = `/download/${jobId}?type=${type}`;
+// function downloadFile(jobId, type) {
+//     // Build the URL with Query Parameters
+//     const downloadUrl = `/download/${jobId}?type=${type}`;
 
-    // Trigger the native browser download manager
-    window.location.href = downloadUrl;
-}
-
-
-// async function downloadFile(jobId, type) {
-//     // Forcing true for testing on your iPhone
-//     // const isIOS = isIOS();
-//     const isIOS = false
-
-//     // Define a nice filename here so it's ready for the File constructor
-//     const mime = type === 'audio' ? 'audio/mpeg' : 'video/mp4';
-//     const fileName = `download-${jobId}.${type === 'audio' ? 'mp3' : 'mp4'}`;
-//     const query = `/download/${jobId}?type=${type}`;
-
-//     if (isIOS) {
-//         try {
-//             console.log("Starting iOS Blob Fetch...");
-
-//             const response = await fetch(query);
-
-//             if (!response.ok) throw new Error('Network response was not ok');
-
-//             const blob = await response.blob();
-
-//             // CRITICAL: fileName must be defined (we did that above)
-//             const file = new File([blob], fileName, { type: mime });
-
-//             if (navigator.canShare && navigator.canShare({ files: [file] })) {
-//                 await navigator.share({
-//                     files: [file],
-//                     title: 'Save to Photos',
-//                     text: 'Your video is ready!'
-//                 });
-//             } else {
-//                 console.warn("Share API not supported, falling back to href");
-//                 window.location.href = query;
-//             }
-//         } catch (err) {
-//             console.error("iOS Share failed:", err);
-//             window.location.href = query;
-//         }
-//     } else {
-//         window.location.href = query;
-//     }
+//     // Trigger the native browser download manager
+//     window.location.href = downloadUrl;
 // }
+
+
+async function downloadFile(jobId, type) {
+    // Forcing true for testing on your iPhone
+    // const isIOS = isIOS();
+    const isIOS = true
+
+    // Define a nice filename here so it's ready for the File constructor
+    const mime = type === 'audio' ? 'audio/mpeg' : 'video/mp4';
+    const fileName = `download-${jobId}.${type === 'audio' ? 'mp3' : 'mp4'}`;
+    const query = `/download/${jobId}?type=${type}`;
+
+    if (isIOS) {
+        try {
+            console.log("Starting iOS Blob Fetch...");
+
+            const response = await fetch(query);
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const blob = await response.blob();
+
+            // CRITICAL: fileName must be defined (we did that above)
+            const file = new File([blob], fileName, { type: mime });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Save to Photos',
+                    text: 'Your video is ready!'
+                });
+            } else {
+                console.warn("Share API not supported, falling back to href");
+                // window.location.href = query;
+            }
+        } catch (err) {
+            console.error("iOS Share failed:", err);
+            // window.location.href = query;
+        }
+    } else {
+        // window.location.href = query;
+    }
+}
 
 
 
