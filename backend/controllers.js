@@ -90,8 +90,11 @@ export function downloadController(req, res) {
     stream.pipe(res);
 
     stream.on("end", () => {
-        fs.unlink(filePath, (err) => {
-            if (err) console.error("Failed to delete file:", err);
-        });
-    });
+        // Wait 5 minutes before deleting to ensure Safari is done since it uses propbing and making multiple fetch requests
+        setTimeout(() => {
+            if (fs.existsSync(filePath)) {
+                fs.unlink(filePath, () => { });
+            }
+        }, 1000 * 60 * 5);
+    })
 }
