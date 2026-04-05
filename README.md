@@ -1,8 +1,10 @@
-#  <img width="60" height="60" alt="icon-60" src="https://github.com/user-attachments/assets/53ab4a59-ac00-4aa4-9ee4-30b7c9c1fd1e" /> yt-dlp-web
+<h1 align="center">yt-dlp-web</h1>
 
+<p align="center">
+  <img width="200" height="200" src="https://github.com/KianDelamarre/yt-dlp-web/blob/main/frontend/icons/icon-512.png" />
+</p>
 
-
-
+##
 
 
 A sleek, self-hosted web interface for [yt-dlp](https://github.com/yt-dlp/yt-dlp). Effortlessly download videos and audio from YouTube, TikTok, and hundreds of other platforms directly to your server.
