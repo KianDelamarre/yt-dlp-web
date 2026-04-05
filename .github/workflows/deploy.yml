@@ -2,6 +2,9 @@ name: Build and Deploy
 
 on:
   push:
+    paths-ignore:
+      - '**/README.md'
+      - '.github/workflows/**'
     branches: [ "main" ]
 
 jobs:
