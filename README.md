@@ -2,6 +2,10 @@
 
 A sleek, self-hosted web interface for [yt-dlp](https://github.com/yt-dlp/yt-dlp). Effortlessly download videos and audio from YouTube, TikTok, and hundreds of other platforms directly to your server.
 
+[![Docker Image Size](https://img.shields.io/docker/image-size/kiansd/yt-dlp-web/latest)](https://hub.docker.com/r/kiansd/yt-dlp-web)
+[![Docker Pulls](https://img.shields.io/docker/pulls/kiansd/yt-dlp-web)](https://hub.docker.com/r/kiansd/yt-dlp-web)
+
+
 ## ✨ Features
 
 - **🚀 Simple & Fast**: Paste a URL and download in seconds.
@@ -65,7 +69,7 @@ If you want to run the project locally without Docker:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/yt-dlp-web.git
+   git clone https://github.com/KianDelamarre/yt-dlp-web.git
    cd yt-dlp-web
    ```
 
@@ -85,12 +89,10 @@ If you want to run the project locally without Docker:
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Contributions are welcome! Feel free to open an issue or submit a pull request.
+- Open an issue for bugs or feature requests.
 
 ---
 
 Built with ❤️ using [yt-dlp](https://github.com/yt-dlp/yt-dlp).
+
