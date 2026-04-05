@@ -1,4 +1,9 @@
-# 📺 yt-dlp-web
+#  <img width="60" height="60" alt="icon-60" src="https://github.com/user-attachments/assets/53ab4a59-ac00-4aa4-9ee4-30b7c9c1fd1e" /> yt-dlp-web
+
+
+
+
+
 
 A sleek, self-hosted web interface for [yt-dlp](https://github.com/yt-dlp/yt-dlp). Effortlessly download videos and audio from YouTube, TikTok, and hundreds of other platforms directly to your server.
 
@@ -9,11 +14,11 @@ A sleek, self-hosted web interface for [yt-dlp](https://github.com/yt-dlp/yt-dlp
 ## ✨ Features
 
 - **🚀 Simple & Fast**: Paste a URL and download in seconds.
-- **🎥 iOS Compatible MP4**: Downloads are optimized for playback on iOS and other modern devices (h.264/AAC).
+- **🎥 iOS Compatible MP4**: Video downloads optimised for IOS to save directly to photos.
 - **🎵 High-Quality Audio**: Extract audio as high-quality MP3 files.
 - **📱 TikTok Ready**: Works seamlessly with TikTok, YouTube, and many more.
 - **🐳 Dockerized**: Easy deployment with Docker and Docker Compose.
-- **🎨 Modern UI**: A clean, responsive interface (YT Downloader) that works on desktop and mobile.
+- **🎨 Modern UI**: A clean, responsive interface that works on desktop and mobile.
 - **🛠️ Self-Hosted**: Keep your downloads private and accessible on your local network.
 
 ## 🚀 Quick Start (Docker Compose)
