@@ -101,5 +101,10 @@ If you want to run the project locally without Docker:
 
 ---
 
-Built with ❤️ using [yt-dlp](https://github.com/yt-dlp/yt-dlp).
+## 📄 License
 
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for the full license text.
+
+---
+
+Built with ❤️ using [yt-dlp](https://github.com/yt-dlp/yt-dlp).
