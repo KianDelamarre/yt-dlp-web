@@ -28,8 +28,6 @@ A sleek, self-hosted web interface for [yt-dlp](https://github.com/yt-dlp/yt-dlp
 The easiest way to get started is using Docker Compose. Create a `docker-compose.yml` file with the following content:
 
 ```yaml
-version: '3.8'
-
 services:
   yt-dlp-web:
     image: kiansd/yt-dlp-web:latest
