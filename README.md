@@ -37,6 +37,8 @@ services:
     restart: unless-stopped
     environment:
       - ALLOWED_ORIGIN=http://your-ip-or-domain # Optional: Set your frontend origin for CORS
+      - YT_DLP_UPDATE_TMIE='0 3 * * *' # Optional: sets update schedule for yt-dlp using internal cron job, default 3am
+      - TZ=Europe/London # Optional: set timezone for update schedule, default Europe/London
     volumes:
       - ./downloads:/tmp # Local folder to store temporary download files
 ```
@@ -59,6 +61,8 @@ services:
 | Environment Variable | Default | Description |
 |----------------------|---------|-------------|
 | `ALLOWED_ORIGIN`     | `*`     | The origin allowed to make CORS requests. Set this to your server's IP or domain for better security. |
+| `YT_DLP_UPDATE_TMIE`     | `0 3 * * *`     | The time interval used to update internal yt-dlp, uses cron |
+| `TZ`     | `Europe/London`     | Timezone for use with yt-dlp update scheduler |
 
 ## 🏗️ Local Development
 
