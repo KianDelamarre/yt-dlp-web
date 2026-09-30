@@ -1,12 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getInfoService, processMediaService } from "./services.js";
+import { getInfoService, processMediaService } from "../service/service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const frontendPath = path.resolve(__dirname, "../frontend");
+const frontendPath = path.resolve(__dirname, "../../../frontend");
 
 export function serveFrontendController(req, res) {
     res.sendFile(path.join(frontendPath, "index.html"));

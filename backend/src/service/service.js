@@ -3,6 +3,7 @@ import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -14,8 +15,7 @@ export function getInfoService(url) {
             url,
             "--skip-download",
             "--dump-json",
-            "--remote-components",
-            "ejs:github"
+            "--remote-components", "ejs:github"
         ];
         const proc = spawn("yt-dlp", args);
 
@@ -62,54 +62,8 @@ export function getInfoService(url) {
 //   .then((data) => console.log(data))
 //   .catch((err) => console.error(err));
 
-export function convertSwitchService(url, convertParams) {
-    if (convertParams.type === "audio") {
-        return convertToAudioService(url);
-    }
-    else if (convertParams.type === "video") {
-        return convertToVideoService(url);
-    }
-    else {
-        throw new Error("Invalid convert type");
-    }
-}
 
-export function convertToAudioService(url) {
-    return new Promise((resolve, reject) => {
-        const jobId = Date.now();
-        const outputPath = `/tmp/${jobId}.mp3`; // predictable final file path
 
-        const args = [
-            url,
-            "--extract-audio",
-            "--audio-format", "mp3",
-            "-o", `/tmp/${jobId}.%(ext)s`
-        ];
-
-        const proc = spawn("yt-dlp", args);
-
-        proc.stdout.on("data", (data) => {
-            console.log(`stdout: ${data}`);
-        });
-
-        proc.stderr.on("data", (data) => {
-            console.error(`stderr: ${data}`);
-        });
-
-        proc.on("close", (code) => {
-            if (code === 0) {
-                // confirm file exists before resolving
-                if (fs.existsSync(outputPath)) {
-                    resolve({ done: true, path: outputPath, jobId: jobId });
-                } else {
-                    reject(new Error("yt-dlp finished but file was not found"));
-                }
-            } else {
-                reject(new Error(`yt-dlp exited with code ${code}`));
-            }
-        });
-    });
-}
 
 
 export function processMediaService(convertParams) {
@@ -131,16 +85,11 @@ export function processMediaService(convertParams) {
         const outputPath = `/tmp/${jobId}.${ext}`;
 
         // Base arguments common to both
-        let args = [url, "-o", `/tmp/${jobId}.%(ext)s`];
-
-
-        // Inside your video conversion function
-        // args = [
-        //     url,
-        //     "-f", "bestvideo+bestaudio/best", // Get best quality
-        //     "--merge-output-format", "mkv",    // FORCE the output to be .mkv
-        //     "-o", `/tmp/${jobId}.%(ext)s`      // yt-dlp will replace %(ext)s with mkv
-        // ];
+        let args = [
+            url,
+            "-o", `/tmp/${jobId}.%(ext)s`,
+            "--remote-components", "ejs:github"
+        ];
 
         if (type === "audio") {
             console.log("extracting audio")

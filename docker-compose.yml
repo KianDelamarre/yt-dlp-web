@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   yt-dlp-web:
-    image: kiansd/yt-dlp-web:latest
+    # image: kiansd/yt-dlp-web:latest
+    image: yt-dlp-web
     container_name: yt-dlp-web
     ports:
       - "3002:3000"
@@ -14,6 +13,7 @@ services:
       # This prevents the container's storage from ballooning during large video conversions,
       # and gives you access to the files if you ever want to check them manually.
       - ./downloads:/tmp
-      - ./backend:/app/backend
+      - ./backend/src:/app/backend/src
+
       - ./frontend:/app/frontend
       # - ./:/app
